@@ -487,6 +487,8 @@ def foodHeuristic(state, problem):
     if len(foodGrid.asList()) is 0:
         return 0
 
+    # Maximum manhattan distance of any piece of food is our heuristic.
+    # We memoize this so that we don't need to repeat computations
     for food in foodGrid.asList():
         key = position + food
         if key in problem.heuristicInfo:
@@ -494,7 +496,7 @@ def foodHeuristic(state, problem):
         else:
             distance = mazeDistance(food, position, problem.startingGameState)
             problem.heuristicInfo[key] = distance
-            maxDist = max(maxDist, problem.heuristicInfo[key])
+            maxDist = max(maxDist, distance)
     return maxDist
 
 class ClosestDotSearchAgent(SearchAgent):
@@ -524,7 +526,7 @@ class ClosestDotSearchAgent(SearchAgent):
         food = gameState.getFood()
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
-        return search.ucs(problem)
+        return search.bfs(problem)
         
 
 class AnyFoodSearchProblem(PositionSearchProblem):
